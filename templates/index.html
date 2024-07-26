@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTFS Query App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-96 bg-white shadow-md p-6 flex flex-col">
+            <!-- <h1 class="text-2xl font-bold mb-8 text-left">GTFS Query App</h1> -->
+            
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold mb-4">Upload GTFS Data</h2>
+                <form id="upload-form">
+                    <label for="file-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <p class="text-xs text-gray-500">Upload GTFS ZIP</p>
+                        </div>
+                        <input id="file-upload" type="file" class="hidden" name="file" accept=".zip" />
+                    </label>
+                </form>
+                <div id="upload-status" class="mt-2 text-center hidden">
+                    <div class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-blue-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+                    <span class="ml-2 text-xs text-blue-600">Uploading...</span>
+                </div>
+                <div id="upload-success" class="mt-2 text-center text-green-600 text-xs hidden">
+                    File uploaded successfully!
+                </div>
+                <div id="upload-error" class="mt-2 text-center text-red-600 text-xs hidden">
+                    Upload error occurred.
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Select LLM Model</h2>
+                <select id="llm-selector" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <div id="llm-change-status" class="mt-2 text-center hidden">
+                    <div class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-blue-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+                    <span class="ml-2 text-xs text-blue-600">Changing LLM...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300 ease-in-out">
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">Query GTFS Data</h2>
+                <form id="query-form">
+                    <input type="text" id="query-input" name="query" class="w-full px-3 py-2 border border-gray-300 rounded-md mb-4" placeholder="Enter your question (e.g., 'What is the last stop on the orange line?')">
+                    <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Submit Query</button>
+                </form>
+                <div id="query-status" class="mt-4 text-center hidden">
+                    <div class="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-green-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+                    <p class="mt-2 text-green-600">Processing query...</p>
+                </div>
+                <div id="result" class="mt-8">
+                    <h3 class="text-lg font-semibold mb-2">Results:</h3>
+                    <div id="result-content" class="bg-gray-100 p-4 rounded-md overflow-x-auto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug toggle button -->
+        <button id="debug-toggle" class="fixed bottom-4 right-4 bg-gray-800 text-white p-2 rounded-full shadow-lg">
+            <i class="fas fa-bug"></i>
+        </button>
+
+        <!-- Debug drawer (hidden by default) -->
+        <div id="debug-drawer" class="fixed inset-y-0 right-0 w-96 bg-gray-900 p-4 pb-6 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-white">Debug Information</h2>
+                <button id="debug-close" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="debug-info" class="flex-1 overflow-y-auto font-mono text-sm text-gray-300">
+                <!-- Debug entries will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
